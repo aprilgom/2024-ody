@@ -73,7 +73,6 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-
         <TextView
             android:id="@+id/tv_meeting_date_time"
             style="@style/pretendard_medium_16"

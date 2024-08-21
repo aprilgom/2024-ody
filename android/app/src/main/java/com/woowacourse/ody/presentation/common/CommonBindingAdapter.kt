@@ -34,8 +34,8 @@ fun ImageView.setCircleImageUrl(imageUrl: String) {
 }
 
 @BindingAdapter("onSingleClick")
-fun View.setOnSingleClickListener(onSingleClick: (View) -> Unit) {
-    val singleClickListener = SingleClickListener { onSingleClick(this) }
+fun View.setOnSingleClickListener(onSingleClick: () -> Unit) {
+    val singleClickListener = SingleClickListener { onSingleClick() }
     this.setOnClickListener(singleClickListener)
 }
 
