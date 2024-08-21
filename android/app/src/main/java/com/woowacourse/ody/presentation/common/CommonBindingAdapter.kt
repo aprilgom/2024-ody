@@ -1,12 +1,12 @@
 package com.woowacourse.ody.presentation.common
 
 import android.view.View
+import android.view.View.OnClickListener
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.woowacourse.ody.presentation.common.listener.SingleClickListener
-import com.woowacourse.ody.presentation.common.listener.setOnSingleClickListener
 
 @BindingAdapter("visibility")
 fun View.setVisibility(isVisible: Boolean?) {
@@ -36,5 +36,11 @@ fun ImageView.setCircleImageUrl(imageUrl: String) {
 @BindingAdapter("onSingleClick")
 fun View.setOnSingleClickListener(onSingleClick: (View) -> Unit) {
     val singleClickListener = SingleClickListener { onSingleClick(this) }
+    this.setOnClickListener(singleClickListener)
+}
+
+@BindingAdapter("onSingleClick")
+fun View.setOnSingleClickListener(onSingleClick: OnClickListener) {
+    val singleClickListener = SingleClickListener { onSingleClick.onClick(this) }
     this.setOnClickListener(singleClickListener)
 }

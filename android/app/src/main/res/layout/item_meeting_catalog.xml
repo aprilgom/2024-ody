@@ -151,7 +151,6 @@
             app:layout_constraintTop_toBottomOf="@id/layout_departure_arrival"
             tools:text="15분 걸려요" />
 
-
         <include
             layout="@layout/layout_navigate_to_eta"
             android:layout_width="wrap_content"
@@ -164,7 +163,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:onClickDisabled="@{() -> meetingsListener.guideItemDisabled()}"
             app:onClickEnabled="@{() -> meetingsItemListener.navigateToEtaDashboard(meeting.id)}" />
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
