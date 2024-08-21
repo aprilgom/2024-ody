@@ -7,6 +7,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.woowacourse.ody.R
+import com.woowacourse.ody.presentation.common.listener.setOnSingleClickListener
 import com.woowacourse.ody.presentation.room.etadashboard.listener.MissingToolTipListener
 import com.woowacourse.ody.presentation.room.etadashboard.listener.NudgeListener
 import com.woowacourse.ody.presentation.room.etadashboard.model.EtaDurationMinuteTypeUiModel
@@ -39,7 +40,7 @@ fun TextView.setOnClickMissingTooltip(
     isUserSelf: Boolean,
     missingToolTipListener: MissingToolTipListener,
 ) {
-    setOnClickListener {
+    setOnSingleClickListener {
         val point = this.getPointOnScreen()
         missingToolTipListener.onClickMissingToolTipListener(point, isUserSelf)
     }
@@ -61,7 +62,7 @@ fun TextView.setOnClickNudge(
     mateEtaUiModel: MateEtaUiModel,
     nudgeListener: NudgeListener,
 ) {
-    setOnClickListener {
+    setOnSingleClickListener {
         if (
             mateEtaUiModel.isUserSelf.not() &&
             (mateEtaUiModel.etaTypeUiModel == EtaTypeUiModel.LATE || mateEtaUiModel.etaTypeUiModel == EtaTypeUiModel.LATE_WARNING)

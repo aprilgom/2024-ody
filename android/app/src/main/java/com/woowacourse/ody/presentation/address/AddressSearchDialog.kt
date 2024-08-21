@@ -22,6 +22,7 @@ import com.woowacourse.ody.presentation.address.model.toGeoLocationUiModel
 import com.woowacourse.ody.presentation.address.web.AddressSearchInterface
 import com.woowacourse.ody.presentation.address.web.LocalContentWebViewClient
 import com.woowacourse.ody.presentation.common.LoadingDialog
+import com.woowacourse.ody.presentation.common.listener.setOnSingleClickListener
 
 class AddressSearchDialog : DialogFragment(), AddressReceiveListener {
     private var _binding: DialogAddressSearchBinding? = null
@@ -57,7 +58,7 @@ class AddressSearchDialog : DialogFragment(), AddressReceiveListener {
     }
 
     private fun initializeView() {
-        binding.bgAddressSearch.setOnClickListener { dismiss() }
+        binding.bgAddressSearch.setOnSingleClickListener { dismiss() }
         dialog?.window?.apply {
             setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
             setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))

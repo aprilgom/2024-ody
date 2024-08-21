@@ -96,12 +96,12 @@
                 android:layout_marginStart="18dp"
                 android:layout_marginTop="18dp"
                 android:layout_marginEnd="57dp"
-                android:onClick="@{() -> listener.onCreateMeeting()}"
                 android:text="약속 개설하기"
                 android:textColor="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:onSingleClick="@{() -> listener.onCreateMeeting()}" />
 
             <TextView
                 android:id="@+id/tv_join_meeting"
@@ -110,12 +110,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="29dp"
                 android:layout_marginBottom="18dp"
-                android:onClick="@{() -> listener.onJoinMeeting()}"
                 android:text="약속 참여하기"
                 android:textColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="@id/tv_create_meeting"
-                app:layout_constraintTop_toBottomOf="@id/tv_create_meeting" />
+                app:layout_constraintTop_toBottomOf="@id/tv_create_meeting"
+                app:onSinglelick="@{() -> listener.onJoinMeeting()}" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -126,10 +126,10 @@
             android:layout_marginEnd="32dp"
             android:layout_marginBottom="32dp"
             android:backgroundTint="@color/purple_300"
-            android:onClick="@{() -> listener.onFab()}"
             android:src="@drawable/selector_floating_button"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:onSingleClick="@{() -> listener.onFab()}"
             app:shapeAppearance="@style/floating_button_style"
             app:tint="@color/white" />
 
