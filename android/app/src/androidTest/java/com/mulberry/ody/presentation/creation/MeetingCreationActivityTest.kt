@@ -20,6 +20,7 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class MeetingCreationActivityTest {
+    //aa
     @get:Rule
     val activityRule = ActivityScenarioRule(MeetingCreationActivity::class.java)
 
