@@ -5,8 +5,6 @@ on:
       - main
     paths:
       - android/**
-    paths-ignore:
-      - backend/**
     types:
       - closed
 
