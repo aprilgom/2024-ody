@@ -9,6 +9,8 @@ import com.mulberry.ody.data.local.service.EtaDashboardNotification
 import com.mulberry.ody.presentation.common.PermissionHelper
 import com.mulberry.ody.presentation.common.gps.GeoLocationHelper
 import com.mulberry.ody.presentation.common.gps.LocationHelper
+import com.mulberry.ody.presentation.common.image.ImageShareHelper
+import com.mulberry.ody.presentation.common.image.KakaoImageShareHelper
 import com.mulberry.ody.presentation.notification.FCMNotification
 import dagger.Module
 import dagger.Provides
@@ -77,5 +79,12 @@ object AppModule {
         notificationManager: NotificationManager,
     ): EtaDashboardNotification {
         return EtaDashboardNotification(context, notificationManager)
+    }
+
+    @Provides
+    fun provideImageHelper(
+        @ApplicationContext context: Context,
+    ): ImageShareHelper {
+        return KakaoImageShareHelper(context)
     }
 }

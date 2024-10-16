@@ -1,12 +1,8 @@
 package com.mulberry.ody.presentation.room
 
-import android.os.Bundle
-import androidx.lifecycle.AbstractSavedStateViewModelFactory
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
-import androidx.savedstate.SavedStateRegistryOwner
 import com.mulberry.ody.domain.apiresult.onFailure
 import com.mulberry.ody.domain.apiresult.onNetworkError
 import com.mulberry.ody.domain.apiresult.onSuccess
@@ -33,9 +29,7 @@ import com.mulberry.ody.presentation.room.log.model.NotificationLogUiModel
 import com.mulberry.ody.presentation.room.log.model.toMateUiModels
 import com.mulberry.ody.presentation.room.log.model.toMeetingUiModel
 import com.mulberry.ody.presentation.room.log.model.toNotificationUiModels
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
-import dagger.assisted.AssistedInject
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -49,18 +43,21 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.time.LocalDateTime
+import javax.inject.Inject
 
+@HiltViewModel
 class MeetingRoomViewModel
-    @AssistedInject
+    @Inject
     constructor(
         private val analyticsHelper: AnalyticsHelper,
-        @Assisted private val meetingId: Long,
         private val matesEtaRepository: MatesEtaRepository,
         private val notificationLogRepository: NotificationLogRepository,
         private val meetingRepository: MeetingRepository,
         private val imageStorage: ImageStorage,
         private val imageShareHelper: ImageShareHelper,
+        private val savedStateHandle: SavedStateHandle,
     ) : BaseViewModel(), NudgeListener {
+        private val meetingId: Long = savedStateHandle[MEETING_ID_KEY] ?: -1L
         private val matesEta: Flow<MateEtaInfo?> =
             matesEtaRepository.fetchMatesEta(meetingId = meetingId)
 
@@ -74,7 +71,8 @@ class MeetingRoomViewModel
                 initialValue = null,
             )
 
-        private val _meeting: MutableStateFlow<MeetingDetailUiModel> = MutableStateFlow(MeetingDetailUiModel())
+        private val _meeting: MutableStateFlow<MeetingDetailUiModel> =
+            MutableStateFlow(MeetingDetailUiModel())
         val meeting: StateFlow<MeetingDetailUiModel> = _meeting.asStateFlow()
 
         private val _mates: MutableStateFlow<List<MateUiModel>> = MutableStateFlow(listOf())
@@ -101,7 +99,9 @@ class MeetingRoomViewModel
                 meetingRepository.postNudge(Nudge(nudgeId, mateId))
                     .suspendOnSuccess {
                         matesEta.collect { mateEta ->
-                            val mateNickname = mateEta?.mateEtas?.find { it.mateId == mateId }?.nickname ?: return@collect
+                            val mateNickname =
+                                mateEta?.mateEtas?.find { it.mateId == mateId }?.nickname
+                                    ?: return@collect
                             _nudgeSuccessMate.emit(mateNickname)
                         }
                     }.onFailure { code, errorMessage ->
@@ -231,29 +231,9 @@ class MeetingRoomViewModel
             }
         }
 
-        @AssistedFactory
-        interface MeetingViewModelFactory {
-            fun create(meetingId: Long): MeetingRoomViewModel
-        }
-
         companion object {
+            private const val MEETING_ID_KEY = "meeting_id"
             private const val TAG = "MeetingRoomViewModel"
             private const val STATE_FLOW_SUBSCRIPTION_TIMEOUT_MILLIS = 5000L
-
-            fun provideFactory(
-                assistedFactory: MeetingViewModelFactory,
-                owner: SavedStateRegistryOwner,
-                defaultArgs: Bundle? = null,
-                meetingId: Long,
-            ): AbstractSavedStateViewModelFactory =
-                object : AbstractSavedStateViewModelFactory(owner, defaultArgs) {
-                    override fun <T : ViewModel> create(
-                        key: String,
-                        modelClass: Class<T>,
-                        handle: SavedStateHandle,
-                    ): T {
-                        return assistedFactory.create(meetingId) as T
-                    }
-                }
         }
     }

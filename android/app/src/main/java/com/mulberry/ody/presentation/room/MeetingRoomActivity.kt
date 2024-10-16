@@ -10,7 +10,6 @@ import androidx.fragment.app.commit
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.lifecycle.viewmodel.viewModelFactory
 import com.mulberry.ody.R
 import com.mulberry.ody.databinding.ActivityMeetingRoomBinding
 import com.mulberry.ody.presentation.common.binding.BindingActivity
@@ -19,18 +18,20 @@ import com.mulberry.ody.presentation.room.etadashboard.EtaDashboardFragment
 import com.mulberry.ody.presentation.room.log.NotificationLogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MeetingRoomActivity :
     BindingActivity<ActivityMeetingRoomBinding>(R.layout.activity_meeting_room),
     BackListener {
+    /*
     @Inject
     lateinit var viewModelFactory: MeetingRoomViewModel.MeetingViewModelFactory
 
     private val viewModel: MeetingRoomViewModel by viewModels<MeetingRoomViewModel> {
         MeetingRoomViewModel.provideFactory(viewModelFactory, this, meetingId = getMeetingId())
     }
+     */
+    private val viewModel: MeetingRoomViewModel by viewModels()
 
     private val fragments: Map<String, Fragment> by lazy {
         mapOf(
