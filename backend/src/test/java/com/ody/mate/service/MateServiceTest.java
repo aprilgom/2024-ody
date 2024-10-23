@@ -28,6 +28,8 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -145,14 +147,15 @@ class MateServiceTest extends BaseServiceTest {
                     .isInstanceOf(OdyBadRequestException.class);
         }
 
-        @DisplayName("약속 이후 30분까지 mate를 재촉할 수 있다")
-        @Test
-        void nudgeSuccessWhenTimeWithInNudgeAvailableTime() {
-            LocalDateTime before30Minutes = LocalDateTime.now().minusMinutes(30L);
-            Meeting before30MinutesMeeting = fixtureGenerator.generateMeeting(before30Minutes);
-            Mate requestMate = fixtureGenerator.generateMate(before30MinutesMeeting);
-            Mate nudgedLateWarningMate = fixtureGenerator.generateMate(before30MinutesMeeting);
-            Eta lateWarningEta = fixtureGenerator.generateEta(nudgedLateWarningMate, 2L);
+        @DisplayName("약속 시간 30분 전후까지 mate를 재촉할 수 있다")
+        @ParameterizedTest
+        @ValueSource(longs = {30L, -30L})
+        void nudgeSuccessWhenTimeWithInNudgeAvailableTime(long timeInterval) {
+            LocalDateTime remainTimeFromMeeting = LocalDateTime.now().plusMinutes(timeInterval);
+            Meeting nudgeAvailableMeeting = fixtureGenerator.generateMeeting(remainTimeFromMeeting);
+            Mate requestMate = fixtureGenerator.generateMate(nudgeAvailableMeeting);
+            Mate nudgedLateWarningMate = fixtureGenerator.generateMate(nudgeAvailableMeeting);
+            Eta lateWarningEta = fixtureGenerator.generateEta(nudgedLateWarningMate, 31L);
 
             NudgeRequest nudgeRequest = new NudgeRequest(requestMate.getId(), nudgedLateWarningMate.getId());
             mateService.nudge(nudgeRequest);
@@ -160,14 +163,15 @@ class MateServiceTest extends BaseServiceTest {
             Mockito.verify(fcmPushSender, times(1)).sendNudgeMessage(any(Notification.class), any(DirectMessage.class));
         }
 
-        @DisplayName("약속 31분 후 부터는 mate를 재촉할 수 없다")
-        @Test
-        void nudgeFailWhenTimeIsNotWithInNudgeAvailableTime() {
-            LocalDateTime before31Minutes = LocalDateTime.now().minusMinutes(31L);
-            Meeting before31MinutesMeeting = fixtureGenerator.generateMeeting(before31Minutes);
-            Mate requestMate = fixtureGenerator.generateMate(before31MinutesMeeting);
-            Mate nudgedLateWarningMate = fixtureGenerator.generateMate(before31MinutesMeeting);
-            Eta lateWarningEta = fixtureGenerator.generateEta(nudgedLateWarningMate, 2L);
+        @DisplayName("약속 31분 이전, 혹은 31분 후 부터는 mate를 재촉할 수 없다")
+        @ParameterizedTest
+        @ValueSource(longs = {31L, -31L})
+        void nudgeFailWhenTimeIsNotWithInNudgeAvailableTime(long timeInterval) {
+            LocalDateTime remainTimeFromMeeting = LocalDateTime.now().plusMinutes(timeInterval);
+            Meeting nudgeNotAvailableMeeting = fixtureGenerator.generateMeeting(remainTimeFromMeeting);
+            Mate requestMate = fixtureGenerator.generateMate(nudgeNotAvailableMeeting);
+            Mate nudgedLateWarningMate = fixtureGenerator.generateMate(nudgeNotAvailableMeeting);
+            Eta lateWarningEta = fixtureGenerator.generateEta(nudgedLateWarningMate, 31L);
 
             NudgeRequest nudgeRequest = new NudgeRequest(requestMate.getId(), nudgedLateWarningMate.getId());
 

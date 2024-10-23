@@ -17,6 +17,7 @@ import com.ody.notification.service.NotificationService;
 import com.ody.route.domain.RouteTime;
 import com.ody.route.service.RouteService;
 import com.ody.util.TimeUtil;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -95,8 +96,8 @@ public class MateService {
     }
 
     private boolean isWithinNudgeTime(Meeting meeting) {
-        LocalDateTime nudgeEndTime = meeting.getMeetingTime().plusMinutes(AVAILABLE_NUDGE_DURATION);
-        return !TimeUtil.nowWithTrim().isAfter(nudgeEndTime);
+        long minutesInterval = Duration.between(TimeUtil.nowWithTrim(), meeting.getMeetingTime()).toMinutes();
+        return Math.abs(minutesInterval) <= AVAILABLE_NUDGE_DURATION;
     }
 
     private boolean canNudgedStatus(Mate mate) {
