@@ -145,12 +145,13 @@ class MateServiceTest extends BaseServiceTest {
                     .isInstanceOf(OdyBadRequestException.class);
         }
 
-        @DisplayName("약속 30분 이후까지 mate를 재촉할 수 있다")
+        @DisplayName("약속 이후 30분까지 mate를 재촉할 수 있다")
         @Test
         void nudgeSuccessWhenTimeWithInNudgeAvailableTime() {
-            Meeting availableNudgeMeeting = fixtureGenerator.generateMeeting(LocalDateTime.now().minusMinutes(30L));
-            Mate requestMate = fixtureGenerator.generateMate(availableNudgeMeeting);
-            Mate nudgedLateWarningMate = fixtureGenerator.generateMate(availableNudgeMeeting);
+            LocalDateTime before30Minutes = LocalDateTime.now().minusMinutes(30L);
+            Meeting before30MinutesMeeting = fixtureGenerator.generateMeeting(before30Minutes);
+            Mate requestMate = fixtureGenerator.generateMate(before30MinutesMeeting);
+            Mate nudgedLateWarningMate = fixtureGenerator.generateMate(before30MinutesMeeting);
             Eta lateWarningEta = fixtureGenerator.generateEta(nudgedLateWarningMate, 2L);
 
             NudgeRequest nudgeRequest = new NudgeRequest(requestMate.getId(), nudgedLateWarningMate.getId());
@@ -159,12 +160,13 @@ class MateServiceTest extends BaseServiceTest {
             Mockito.verify(fcmPushSender, times(1)).sendNudgeMessage(any(Notification.class), any(DirectMessage.class));
         }
 
-        @DisplayName("약속 30분 이후에는 mate를 재촉할 수 없다")
+        @DisplayName("약속 31분 후 부터는 mate를 재촉할 수 없다")
         @Test
         void nudgeFailWhenTimeIsNotWithInNudgeAvailableTime() {
-            Meeting notAvailableNudgeMeeting = fixtureGenerator.generateMeeting(LocalDateTime.now().minusMinutes(31L));
-            Mate requestMate = fixtureGenerator.generateMate(notAvailableNudgeMeeting);
-            Mate nudgedLateWarningMate = fixtureGenerator.generateMate(notAvailableNudgeMeeting);
+            LocalDateTime before31Minutes = LocalDateTime.now().minusMinutes(31L);
+            Meeting before31MinutesMeeting = fixtureGenerator.generateMeeting(before31Minutes);
+            Mate requestMate = fixtureGenerator.generateMate(before31MinutesMeeting);
+            Mate nudgedLateWarningMate = fixtureGenerator.generateMate(before31MinutesMeeting);
             Eta lateWarningEta = fixtureGenerator.generateEta(nudgedLateWarningMate, 2L);
 
             NudgeRequest nudgeRequest = new NudgeRequest(requestMate.getId(), nudgedLateWarningMate.getId());
