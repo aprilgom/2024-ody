@@ -44,10 +44,12 @@ jobs:
 
       - name: Add local.properties
         run: |
-          echo base_dev_url='${{ secrets.BASE_DEV_URL }}' > ./local.properties
-          echo base_prod_url='${{ secrets.BASE_PROD_URL }}' > ./local.properties
-          echo kakao_api_key='{{ secrets.KAKAO_API_KEY }}' > ./local.properties
-          echo kakao_native_key='{{ secrets.KAKAO_NATIVE_KEY }}' > ./local.properties
+          echo BASE_DEV_URL='${{ secrets.BASE_DEV_URL }}' > ./local.properties
+          echo BASE_PROD_URL='${{ secrets.BASE_PROD_URL }}' > ./local.properties
+          echo KAKAO_API_KEY='{{ secrets.KAKAO_API_KEY }}' > ./local.properties
+          echo KAKAO_NATIVE_KEY='{{ secrets.KAKAO_NATIVE_KEY }}' > ./local.properties
+          echo TERM_URI='{{ secrets.TERM_URI }}' > ./local.properties
+          echo PRIVACY_POLICY_URL='{{ secrets.PRIVACY_POLICY_URI }}' > ./local.properties
 
       - name: Change gradlew permissions
         run: chmod +x ./gradlew
