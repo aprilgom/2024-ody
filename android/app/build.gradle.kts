@@ -23,7 +23,7 @@ android {
         applicationId = "com.mulberry.ody"
         minSdk = 26
         targetSdk = 34
-        versionCode = 1000
+        versionCode = 1001
         versionName = "9.9.99"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
